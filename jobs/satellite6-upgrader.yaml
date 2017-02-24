@@ -62,6 +62,12 @@
             description: |
                 <p>The number of RHEL6 and RHEL7 clients to Generate.</p>
                 <p>The number of clients will be devided in equal amount for RHEL6 and RHEL7. e.g if 10 is given then 5 each.</p>
+        - bool:
+            name: RHEV_TEMPLATE
+            default: false
+            description: |
+                <p>It will create RHEV templates, can only be used for 6.2 upgarde.</p>
+                <p>It also requires DISTRIBUTION as CDN.</p>
         - choice:
             name: CUSTOMERDB_NAME
             choices:

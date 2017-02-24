@@ -90,6 +90,12 @@ fi
 # Run upgrade for CDN/Downstream
 fab -u root product_upgrade:"${UPGRADE_PRODUCT}"
 
+if [[ "${RHEV_TEMPLATE}" = 'True' ]] && [[ "${DISTRIBUTION}" = 'CDN' ]] && [[ "${FROM_VERSION}" = '6.2' ]] && [[ "${UPGRADE_PRODUCT}" = 'capsule'  ]]
+then
+    fab -u root validate_and_create
+fi
+
+
 # Post Upgrade archive logs from log analyzer tool
 if [ -d upgrade-diff-logs ]; then
     tar -czf Log_Analyzer_Logs.tar.xz upgrade-diff-logs
