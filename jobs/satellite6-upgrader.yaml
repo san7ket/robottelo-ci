@@ -116,7 +116,7 @@
     publishers:
         - satellite6-automation-publishers
         - archive:
-            artifacts: '*.tar.xz'
+            artifacts: '*.tar.xz, pre-upgrade'
         - email-ext:
             recipients: $BUILD_USER_EMAIL
             success: true
