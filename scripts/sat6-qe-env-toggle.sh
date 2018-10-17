@@ -3,7 +3,7 @@ pip install -r requirements.txt
 # Replace all the instances of list email to user email
 if [[ "${ENVIRONMENT}" == 'TEST' ]]; then
 
-    for file in `grep -ir 'QE_EMAIL_LIST' | cut -d ":" -f 1`; do
+    for file in `grep -ir 'QE_EMAIL_LIST' jobs | cut -d ":" -f 1`; do
 
         sed -i 's/QE_EMAIL_LIST/BUILD_USER_EMAIL/g' $file;
 
