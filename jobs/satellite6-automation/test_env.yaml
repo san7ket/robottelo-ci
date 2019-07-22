@@ -1,0 +1,25 @@
+- job:
+    name: 'test_env'
+    display-name: 'test_env'
+    description: |
+        Creates and deploys baseimages
+    project-type: pipeline
+    parameters:
+      - string:
+          name: ENDPOINT
+          default: 'rhai'
+          description: "URL of OS media to create baseimage from"
+      - string:
+          name: SATELLITE_VERSION
+          default: '6.6'
+          description: "Space separated list of hypervisor FQDNs/IPs to deploy image to (empty: use default set)"
+      - string:
+          name: IMAGE
+          description: "Custom DNS server to be set in baseimage (empty: do not set)"
+      - string:
+          name: DISTRO
+          default: 'rhel7'
+          description: "Flag to have IPv6 networking disabled (=True) or enabled (=False)"
+    dsl:
+      !include-raw:
+          - workflows/qe/satellite6-automation/test_env.groovy
