@@ -39,20 +39,21 @@ fileOperations([fileCopyOperation(excludes: '', flattenFiles: true, includes: 'c
 
             remote.allowAnyHosts = true
             remote.name = "Provisioning servers"
-            remote.host = "paprika.lab.eng.rdu2.redhat.com"
+            remote.host = "paprika"
             remote.user = userName
             remote.identityFile = identity
             sshCommand remote: remote, command: 'cat /tmp/b.txt || true'
 
            }
                script{
-                   remote.host = "sesame.lab.eng.rdu2.redhat.com"
-                   sshCommand remote: remote, command: 'hostname'
+                   remote.host = "sesame"
+                   sshCommand remote: remote, command: 'hostname || true'
                    echo a
                    git defaults.robottelo_ci
-                   fileOperations([fileCopyOperation(excludes: '', flattenFiles: true, includes: 'robotello-ci/satellite6-automation.sh', targetLocation: 'satellite6-automation.sh')]
+                   sh 'ls -ll '
+fileOperations([fileCopyOperation(excludes: '', flattenFiles: true, includes: 'robotello-ci/satellite6-automation.sh', targetLocation: 'satellite6-automation.sh')])
+                   sh 'ls -ll '
                }
-            )
 
 
          //sshCommand remote: remote, command: "virsh destroy ${TARGET_IMAGE} || true"
