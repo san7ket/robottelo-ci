@@ -1,7 +1,3 @@
-pip install -U -r requirements.txt docker-py pytest-xdist==1.25.0 sauceclient
-
-cp config/robottelo.properties ./robottelo.properties
-
 sed -i "s/{server_hostname}/${SERVER_HOSTNAME}/" robottelo.properties
 sed -i "s|# screenshots_path=.*|screenshots_path=$(pwd)/screenshots|" robottelo.properties
 sed -i "s|external_url=.*|external_url=http://${SERVER_HOSTNAME}:2375|" robottelo.properties
@@ -89,44 +85,3 @@ if [[ "${SATELLITE_DISTRIBUTION}" != *"GA"* ]]; then
     sed -i "s|sattools_repo=.*|sattools_repo=rhel8=${RHEL8_TOOLS_REPO},rhel7=${RHEL7_TOOLS_REPO},rhel6=${RHEL6_TOOLS_REPO}|" robottelo.properties
     sed -i "s|capsule_repo=.*|capsule_repo=${CAPSULE_REPO}|" robottelo.properties
 fi
-
-if [[ "${SATELLITE_VERSION}" == *"upstream-nightly"* ]]; then
-    ${EXTRA_MARKS} = "and upgrade"
-fi
-
-TEST_TYPE="$(echo tests/foreman/{api,cli,ui,longrun,sys,installer})"
-
-if [ "${ENDPOINT}" == "destructive" ]; then
-    make test-foreman-sys
-elif [ "${ENDPOINT}" != "rhai" ]; then
-    set +e
-    # Run sequential tests
-    $(which py.test) -v --junit-xml="${ENDPOINT}-sequential-results.xml" \
-        -o junit_suite_name="${ENDPOINT}-sequential" \
-        -m "${ENDPOINT} and run_in_one_thread and not stubbed ${EXTRA_MARKS}" \
-        ${TEST_TYPE}
-
-    # Run parallel tests
-    $(which py.test) -v --junit-xml="${ENDPOINT}-parallel-results.xml" -n "${ROBOTTELO_WORKERS}" \
-        -o junit_suite_name="${ENDPOINT}-parallel" \
-        -m "${ENDPOINT} and not run_in_one_thread and not stubbed ${EXTRA_MARKS}" \
-        ${TEST_TYPE}
-    set -e
-else
-    make test-foreman-${ENDPOINT} PYTEST_XDIST_NUMPROCESSES=${ROBOTTELO_WORKERS}
-fi
-
-if [ "${ROBOTTELO_WORKERS}" -gt 0 ]; then
-    make logs-join
-    make logs-clean
-fi
-
-echo
-echo "========================================"
-echo "Server information"
-echo "========================================"
-echo "Hostname: ${SERVER_HOSTNAME}"
-echo "Credentials: admin/changeme"
-echo "========================================"
-echo
-echo "========================================"
